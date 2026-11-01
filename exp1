@@ -1,0 +1,35 @@
+clc;
+clear;
+close all;
+% System parameters
+M = 1;      % Mass (kg)
+B = 0.5;    % Damping coefficient (Ns/m)
+K = 2;      % Stiffness (N/m)
+% Transfer function
+num = [1];
+den = [M B K];
+sys = tf(num, den);
+% Step response
+figure;
+step(sys);
+grid on;
+title('Step Response of Mass-Spring-Damper System');
+% Impulse response
+figure;
+impulse(sys);
+grid on;
+title('Impulse Response of Mass-Spring-Damper System');
+% Ramp response
+figure;
+t = 0:0.01:10;
+ramp = t;
+lsim(sys, ramp, t);
+grid on;
+title('Ramp Response of Mass-Spring-Damper System');
+xlabel('Time (s)');
+ylabel('Response');
+% Pole-Zero Map
+figure;
+pzmap(sys);
+grid on;
+title('Pole-Zero Map of Mass-Spring-Damper System');
