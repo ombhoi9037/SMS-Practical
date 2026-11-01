@@ -1,0 +1,70 @@
+clc;
+clear;
+close all;
+
+% Plant transfer function from the question paper
+num = [1 6 10];
+den = [1 0 7 1];
+G = tf(num, den);
+
+% PID controller
+Kp = 10;
+Ki = 5;
+Kd = 2;
+
+C = pid(Kp, Ki, Kd);
+
+% Closed-loop system with unity negative feedback
+T = feedback(C*G, 1);
+
+% Display transfer functions
+disp('Plant Transfer Function:');
+G
+
+disp('PID Controller:');
+C
+
+disp('Closed-Loop Transfer Function:');
+T
+
+% Simulate for 10 seconds
+t = 0:0.01:10;
+r = ones(size(t));
+
+[y, t] = step(T, t);
+
+% Output response
+figure;
+plot(t, y, 'LineWidth', 1.5);
+hold on;
+plot(t, ones(size(t)), '--');
+grid on;
+xlabel('Time (seconds)');
+ylabel('Output');
+title('Closed-Loop PID Step Response');
+legend('Actual Output', 'Reference Input');
+
+% Error response
+e = 1 - y;
+
+figure;
+plot(t, e, 'LineWidth', 1.5);
+grid on;
+xlabel('Time (seconds)');
+ylabel('Error');
+title('PID System Error Response');
+
+% Stability analysis
+p = pole(T);
+disp('Closed-Loop Poles:');
+disp(p);
+
+if all(real(p) < 0)
+    disp('Closed-Loop System is Stable');
+else
+    disp('Closed-Loop System is Unstable');
+end
+
+% Response characteristics
+disp('Step Response Characteristics:');
+disp(stepinfo(T));
